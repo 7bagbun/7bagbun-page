@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>踹破狗.i喲你媽</title>
+  <style>
+    body {
+      background-color: #ff00ff;
+      text-align: center;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    img {
+      width: 200px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    img:active {
+      transform: scale(0.9);
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text x="0" y="18" font-size="20">🦵</text></svg>'), auto;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    img {
+      width: 200px;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><text x="0" y="18" font-size="20">🦵</text></svg>'), pointer;
+      transition: transform 0.1s ease;
+    }
+
+    img:active {
+      transform: scale(0.9);
+    }
+
+    #score {
+      font-size: 24px;
+      margin-top: 20px;
+      color: #444;
+    }
+
+    .shop {
+      margin-top: 30px;
+      padding: 15px;
+      background: #ff0100;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    .shop button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00ffff;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .shop button:hover {
+      background-color: #19e5e6;
+    }
+
+    @keyframes shake {
+      0% {
+        transform: translate(0px, 0px) rotate(0deg);
+      }
+
+      20% {
+        transform: translate(-5px, 0px) rotate(-5deg);
+      }
+
+      40% {
+        transform: translate(5px, 0px) rotate(5deg);
+      }
+
+      60% {
+        transform: translate(-5px, 0px) rotate(-5deg);
+      }
+
+      80% {
+        transform: translate(5px, 0px) rotate(5deg);
+      }
+
+      100% {
+        transform: translate(0px, 0px) rotate(0deg);
+      }
+    }
+
+    .shake {
+      animation: shake 0.3s;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>踹破狗.i喲你媽</h1>
+
+  <img id="clickImage"
+    src="./assets/images/kickeddog.jpg"
+    alt="kick me!">
+
+  <div id="score">吉斃：0</div>
+  <div id="perSecond"></div>
+
+  <div class="shop">
+    <h2>商店</h2>
+    <div>
+      <button id="upgradeClickBtn">踹大力點 (+1吉斃/踢) - 50吉斃</button>
+    </div>
+    <div>
+      <button id="autoKickBtn">王爸狗園自動屠宰場 (+1吉斃/秒) - 100吉斃</button>
+    </div>
+  </div>
+
+  <audio id="clickSound" preload="auto">
+    <source src="./assets/audioFx/flyflyknock.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    let score = 0;
+    let clickValue = 1;
+    let autoValue = 0;
+
+    let clickUpgradeCost = 50;
+    let autoUpgradeCost = 100;
+    let clickLevel = 0;
+    let autoLevel = 0;
+
+    const scoreDisplay = document.getElementById("score");
+    const perSecondDisplay = document.getElementById("perSecond");
+    const image = document.getElementById("clickImage");
+    const clickSound = document.getElementById("clickSound");
+
+    const upgradeClickBtn = document.getElementById("upgradeClickBtn");
+    const autoKickBtn = document.getElementById("autoKickBtn");
+
+    image.addEventListener("click", () => {
+      score += clickValue;
+      updateScore();
+      clickSound.currentTime = 0;
+      clickSound.play();
+      image.classList.remove("shake");
+      void image.offsetWidth;
+      image.classList.add("shake");
+    });
+
+    upgradeClickBtn.addEventListener("click", () => {
+      if (score >= clickUpgradeCost) {
+        score -= clickUpgradeCost;
+        clickValue++;
+        clickLevel++;
+        clickUpgradeCost = Math.floor(clickUpgradeCost * 1.5);
+        updateButtons();
+        updateScore();
+      }
+    });
+
+    autoKickBtn.addEventListener("click", () => {
+      if (score >= autoUpgradeCost) {
+        score -= autoUpgradeCost;
+        autoValue++;
+        autoLevel++;
+        autoUpgradeCost = Math.floor(autoUpgradeCost * 1.5);
+        updateButtons();
+        updateScore();
+      }
+    });
+
+    setInterval(() => {
+      score += autoValue;
+      updateScore();
+    }, 1000);
+
+    function updateScore() {
+      scoreDisplay.textContent = "吉斃：" + score;
+    }
+
+    function updateButtons() {
+      upgradeClickBtn.textContent = `踹大力點 (+1吉斃/踢) -  ${clickUpgradeCost}吉斃(Lv.${clickLevel})`;
+      autoKickBtn.textContent = `王爸狗園自動屠宰場 (+1吉斃/秒) -  ${autoUpgradeCost}吉斃(Lv.${autoLevel})`;
+    }
+
+    updateButtons();
+
+    let hue = 0;
+    setInterval(() => {
+      hue = (hue + 2) % 360;
+      scoreDisplay.style.color = `hsl(${hue}, 100%, 50%)`;
+    }, 5);
+  </script>
+
+</body>
+
+</html>
